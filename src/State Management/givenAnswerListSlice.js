@@ -3,6 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
     answerArr: [],
     submittedAns: [],
+    previousQuestionAnswer: '',
 }
 
 const givenAnswerListSlice = createSlice({
@@ -21,13 +22,25 @@ const givenAnswerListSlice = createSlice({
                 presentArr.push(action.payload)
             }
         },
-        submittedAnswerHandler: (state, action)=>{
+        showPreviousAnswerHandler: (state, action)=>{
+            const questionId = action.payload.questionId;
             const presentArr = state.answerArr;
-            return {...state, submittedAns: [presentArr]}
+            const previousQuestion = presentArr.find((item)=>{
+                return item.questionId === questionId;
+            })
+            if(previousQuestion){
+                state.previousQuestionAnswer = previousQuestion.givenAnswerText;
+            }else{
+                state.previousQuestionAnswer = '';
+            }
+        },
+        submittedAnswerHandler: (state)=>{
+            const presentArr = state.answerArr;
+            state.submittedAns = presentArr;
         }
     }
 })
 
-export const {storeAnswerHandler, submittedAnswerHandler} = givenAnswerListSlice.actions;
+export const {storeAnswerHandler, showPreviousAnswerHandler, submittedAnswerHandler} = givenAnswerListSlice.actions;
 
 export default givenAnswerListSlice.reducer;

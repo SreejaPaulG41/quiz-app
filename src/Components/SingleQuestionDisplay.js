@@ -1,23 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {storeAnswerHandler} from '../State Management/givenAnswerListSlice';
 import useStateHandler from '../State Management/useStateHandler';
 
 function SingleQuestionDisplay({genreId, questionId, questionText, answerOptions, questionIndex, setQIndex, questions}) {
     const [selected, setSelected] = useState('');
-    const {storeGivenAnswerHandler, submitGivenAnswerHandler} = useStateHandler();
+    const {prevAnswer, storeGivenAnswerHandler, submitGivenAnswerHandler, previousQuestionAnswerHandler} = useStateHandler();
     const history = useNavigate();
 
     useEffect(()=>{
-        if(genreId){
-            history("/genre/" + genreId + "/" + (questionIndex))
-            setSelected('');
-        }
-    },[questionIndex])
+        previousQuestionAnswerHandler({questionId: questionId})
+        setSelected(prevAnswer ? prevAnswer : '');   
+    },[questionId, prevAnswer])
 
     const onPrevClick = (e)=>{
         e.preventDefault();
-        setQIndex(prev=> prev-1)
+        setQIndex(prev=> prev-1);
+        
     }
     const checkCorrectNessHandler = () =>{
         return answerOptions.find((item)=>{

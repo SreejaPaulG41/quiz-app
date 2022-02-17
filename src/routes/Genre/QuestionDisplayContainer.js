@@ -6,25 +6,24 @@ import SingleQuestionDisplay from '../../Components/SingleQuestionDisplay';
 function QuestionDisplayContainer() {
     const { genreBasedQuestionData, answerArr} = useStateHandler();
     const [questionToDisplay, setQuestionToDisplay] = useState({});
-    const questionIndex = parseInt(useParams().quesIndex);
-    const [qIndex, setQIndex] = useState(questionIndex);
+    const [questionIndex, setQuestionIndex] = useState(0);
 
-    console.log(genreBasedQuestionData)
-    console.log(questionIndex)
-    console.log("Answer")
-    console.log(answerArr)
+    // console.log(genreBasedQuestionData)
+    // console.log(questionIndex)
+    // console.log("Answer")
+    // console.log(answerArr)
 
     useEffect(()=>{
         const filteredQuestion = genreBasedQuestionData.find((item, index)=>{
-            return index === qIndex;
+            return index === questionIndex;
         })
         setQuestionToDisplay(filteredQuestion);
-    },[genreBasedQuestionData, questionIndex, qIndex])
+    },[genreBasedQuestionData, questionIndex])
   return (
     <div>
         <h1>QuestionDisplayContainer</h1>
         <div>
-            <SingleQuestionDisplay genreId={questionToDisplay.genreId} questionId={questionToDisplay.questionId} questionText={questionToDisplay.questionText} answerOptions={questionToDisplay.answerOptions} questionIndex={qIndex} setQIndex={setQIndex} questions={genreBasedQuestionData}/>
+            <SingleQuestionDisplay genreId={questionToDisplay.genreId} questionId={questionToDisplay.questionId} questionText={questionToDisplay.questionText} answerOptions={questionToDisplay.answerOptions} questionIndex={questionIndex} setQIndex={setQuestionIndex} questions={genreBasedQuestionData}/>
         </div>
     </div>
   )

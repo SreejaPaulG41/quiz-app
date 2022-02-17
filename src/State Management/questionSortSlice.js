@@ -4,6 +4,8 @@ import {questions} from '../Data/questions';
 const initialState = {
     questionData: questions,
     genreBasedQuestionData: [],
+    genreBasedQuestionTime: 0,
+    genreBasedQuestionFullMarks: 0,
 }
 
 const questionSortSlice = createSlice({
@@ -15,7 +17,17 @@ const questionSortSlice = createSlice({
             const filterQuestions = allQuestions.filter((item)=>{
                 return item.genreId === action.payload;
             })
-            state.genreBasedQuestionData = filterQuestions;            
+            state.genreBasedQuestionData = filterQuestions;    
+            const timeAlloted = state.genreBasedQuestionData.reduce((acc, item)=>{
+                acc = acc + item.timeAlloted;
+                return acc;
+            },0)     
+            state.genreBasedQuestionTime = timeAlloted;
+            const fullMarks = state.genreBasedQuestionData.reduce((acc, item)=>{
+                acc = acc + item.questionMark;
+                return acc;
+            },0)
+            state.genreBasedQuestionFullMarks = fullMarks;   
         }
     }
 })

@@ -1,8 +1,7 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {genreBasedQuestionSort} from './questionSortSlice';
-import {storeAnswerHandler} from './givenAnswerListSlice';
-import {submittedAnswerHandler} from './givenAnswerListSlice';
+import {storeAnswerHandler, submittedAnswerHandler, showPreviousAnswerHandler} from './givenAnswerListSlice';
 
 function useStateHandler() {
     const genreDetails = useSelector(state => state.genreRender.genreDetails);
@@ -10,6 +9,10 @@ function useStateHandler() {
     const genreBasedQuestionData = useSelector(state=>state.genreBasedQuestions.genreBasedQuestionData);
     const answerArr = useSelector(state=>state.answerStoreHandler.answerArr);
     const submittedAnswerArr = useSelector(state=>state.answerStoreHandler.submittedAns);
+    const prevAnswer = useSelector(state=>state.answerStoreHandler.previousQuestionAnswer);
+    const genreBasedQuestionTime = useSelector(state=>state.genreBasedQuestions.genreBasedQuestionTime);
+    const genreBasedQuestionFullMarks = useSelector(state=>state.genreBasedQuestions.genreBasedQuestionFullMarks);
+
 
     const dispatch = useDispatch();
 
@@ -22,7 +25,10 @@ function useStateHandler() {
     const submitGivenAnswerHandler = ()=>{
         dispatch(submittedAnswerHandler());
     }
-    return {genreDetails, questionData, genreBasedQuestionData, answerArr, submittedAnswerArr, genreBasedSortQuestionHandler, storeGivenAnswerHandler, submitGivenAnswerHandler}
+    const previousQuestionAnswerHandler = (answer)=>{
+        dispatch(showPreviousAnswerHandler(answer));
+    }
+    return {genreDetails, questionData, genreBasedQuestionData, answerArr, submittedAnswerArr, prevAnswer, genreBasedQuestionTime, genreBasedQuestionFullMarks, genreBasedSortQuestionHandler, storeGivenAnswerHandler, submitGivenAnswerHandler, previousQuestionAnswerHandler}
   
 }
 
