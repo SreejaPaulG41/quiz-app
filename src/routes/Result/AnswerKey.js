@@ -8,7 +8,6 @@ function AnswerKey({resultArrToShow}) {
         {
             resultArrToShow?.map((item, index)=>
                 <div key={index}>
-                    {console.log(item)}
                     <SingleQuestionAnswerResult key={index + item.questionId} genreId={item.genreId} questionText={item.questionText} questionId={item.questionId} givenAnswerText={item.givenAnswerText} answerOptions={item.answerOptions} rightNess={item.rightNess}/>
                 </div>
             )

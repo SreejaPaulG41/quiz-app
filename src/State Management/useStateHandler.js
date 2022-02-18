@@ -8,6 +8,7 @@ function useStateHandler() {
     const questionData = useSelector(state=>state.genreBasedQuestions.questionData);
     const genreBasedQuestionData = useSelector(state=>state.genreBasedQuestions.genreBasedQuestionData);
     const answerArr = useSelector(state=>state.answerStoreHandler.answerArr);
+    const unAnsweredArray = useSelector(state=>state.answerStoreHandler.unAnsweredArr);
     const submittedAnswerArr = useSelector(state=>state.answerStoreHandler.submittedAns);
     const prevAnswer = useSelector(state=>state.answerStoreHandler.previousQuestionAnswer);
     const genreBasedQuestionTime = useSelector(state=>state.genreBasedQuestions.genreBasedQuestionTime);
@@ -28,7 +29,7 @@ function useStateHandler() {
     const previousQuestionAnswerHandler = (answer)=>{
         dispatch(showPreviousAnswerHandler(answer));
     }
-    return {genreDetails, questionData, genreBasedQuestionData, answerArr, submittedAnswerArr, prevAnswer, genreBasedQuestionTime, genreBasedQuestionFullMarks, genreBasedSortQuestionHandler, storeGivenAnswerHandler, submitGivenAnswerHandler, previousQuestionAnswerHandler}
+    return {genreDetails, questionData, genreBasedQuestionData, answerArr, unAnsweredArray, submittedAnswerArr, prevAnswer, genreBasedQuestionTime, genreBasedQuestionFullMarks, genreBasedSortQuestionHandler, storeGivenAnswerHandler, submitGivenAnswerHandler, previousQuestionAnswerHandler}
   
 }
 

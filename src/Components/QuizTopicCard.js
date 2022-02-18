@@ -12,7 +12,7 @@ function QuizTopicCard({name, id}) {
                 {name}
             </div>
             <div>
-                <Link to={"/genre/" + id}>
+                <Link to={"/genre/" + id + "/1"}>
                     <button onClick={()=>genreBasedSortQuestionHandler(id)}>Start Quiz</button>
                 </Link>
             </div>

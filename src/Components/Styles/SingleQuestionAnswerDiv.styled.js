@@ -9,6 +9,6 @@ export const SingleQuestionAnswerDiv = styled.div`
 
 `
 
-export const optionStyle = styled.div`
+export const OptionStyle = styled.div`
     background-color: ${({bgColor})=>bgColor};
 `

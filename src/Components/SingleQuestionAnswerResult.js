@@ -1,17 +1,27 @@
-import { getArchtype } from 'immer/dist/internal';
 import React, {useState, useEffect} from 'react';
-import {SingleQuestionAnswerDiv, optionStyle} from '../Components/Styles/SingleQuestionAnswerDiv.styled';
+import {SingleQuestionAnswerDiv, OptionStyle} from '../Components/Styles/SingleQuestionAnswerDiv.styled';
 
 function SingleQuestionAnswerResult({ genreId, questionText, questionId, givenAnswerText, answerOptions, rightNess}) {
     const chooseBgColor = (option)=>{
-        if((option === givenAnswerText) && rightNess){
-            return "light-green";
-        }else if((option === givenAnswerText) && !rightNess){
-            return "light-red";
-        }else if((option != givenAnswerText) && option.isCorrect){
-            return "light-green";
-        }else if((option != givenAnswerText) && !option.isCorrect){
-            return "light-gray";
+        if((option.answerText === givenAnswerText) && rightNess){
+            return "#99ff99"; //green color
+        }else if((option.answerText === givenAnswerText) && !rightNess){
+            return "#ffcccc"; //red color
+        }else if((option.answerText != givenAnswerText) && option.isCorrect){
+            return "#99ff99"; //green color
+        }else if((option.answerText != givenAnswerText) && !option.isCorrect){
+            return "#c2c2d6"; //gray color
+        }
+    }
+    const borderColor = (option)=>{
+        if((option.answerText === givenAnswerText) && rightNess){
+            return "#99ff99"; //green color
+        }else if((option.answerText === givenAnswerText) && !rightNess){
+            return "#ffcccc"; //red color
+        }else if((option.answerText != givenAnswerText) && option.isCorrect){
+            return "#99ff99"; //green color
+        }else if((option.answerText != givenAnswerText) && !option.isCorrect){
+            return "#c2c2d6"; //gray color
         }
     }
     return (
@@ -19,9 +29,9 @@ function SingleQuestionAnswerResult({ genreId, questionText, questionId, givenAn
             <div>{questionText}</div>
             <div>{givenAnswerText}</div>
             <div>{answerOptions.map((item, index) =>
-                <optionStyle key={index} bgColor={chooseBgColor(item.answerText)}>
+                <OptionStyle key={index} bgColor={chooseBgColor(item)}>
                     {item.answerText}
-                </optionStyle>
+                </OptionStyle>
             )}</div>
             <div>{rightNess}</div>
         </SingleQuestionAnswerDiv>

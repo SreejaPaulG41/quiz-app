@@ -9,7 +9,7 @@ function App() {
     <AppContainer>
       <Routes>
         <Route path="/" element={<Dashboard/>} />
-        <Route path="/genre/:genreId" element={<QuestionDisplayContainer/>}/>
+        <Route path="/genre/:genreId/:qIndex" element={<QuestionDisplayContainer/>}/>
         <Route path="/result" element={<Result/>}/>
       </Routes>
     </AppContainer>

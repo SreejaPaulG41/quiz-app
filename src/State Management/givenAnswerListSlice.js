@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     answerArr: [],
+    unAnsweredArr: [],
     submittedAns: [],
     previousQuestionAnswer: '',
 }
@@ -13,13 +14,36 @@ const givenAnswerListSlice = createSlice({
         storeAnswerHandler: (state = initialState, action)=>{
             const presentArr = state.answerArr;
             const presentData = presentArr.find((item)=>{
-                return item.questionId === action.payload.questionId;
+                return item.questionId === action.payload.questionId && action.payload.givenAnswerText!=='';
             })
-            if(presentData){
-                const index = presentArr.indexOf(presentData);
-                presentArr[index] = action.payload;
+            if(action.payload.givenAnswerText!==''){
+                if(presentData){
+                    const index = presentArr.indexOf(presentData);
+                    presentArr[index] = action.payload;
+                }else{
+                    presentArr.push(action.payload);
+                    const unAteendPresentArr = state.unAnsweredArr;
+                    const prevUnAteendAns = unAteendPresentArr.find((item)=>{
+                        return item.questionId === action.payload.questionId;
+                    })
+                    if(prevUnAteendAns){
+                        const indexPresent = unAteendPresentArr.indexOf(prevUnAteendAns);
+                        if(indexPresent > -1){
+                            unAteendPresentArr.splice(indexPresent,1);
+                        }
+                    }
+                }
             }else{
-                presentArr.push(action.payload)
+                const unAteendPresentArr = state.unAnsweredArr;
+                const presentData = unAteendPresentArr.find((item)=>{
+                    return item.questionId === action.payload.questionId;
+                })
+                if(presentData){
+                    const index = unAteendPresentArr.indexOf(presentData);
+                    unAteendPresentArr[index] = action.payload;
+                }else{
+                    state.unAnsweredArr.push(action.payload);
+                }
             }
         },
         showPreviousAnswerHandler: (state, action)=>{
