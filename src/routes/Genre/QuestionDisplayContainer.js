@@ -5,11 +5,21 @@ import SingleQuestionDisplay from '../../Components/SingleQuestionDisplay';
 import QuestionChart from './QuestionChart';
 
 function QuestionDisplayContainer() {
-    const { genreBasedQuestionData, answerArr } = useStateHandler();
+    const { genreBasedQuestionData, answerArr , onLoadUnAnseredQuestion, storeNotAnsweredHandler, getUnAnsweredQuestionOnFirstLoad} = useStateHandler();
     const [questionToDisplay, setQuestionToDisplay] = useState({});
     const qsIndex = parseInt(useParams().qIndex);
     const [questionIndex, setQuestionIndex] = useState(qsIndex-1);
     const [selectedAnswer, setSelectedAnswer] = useState("");
+
+    useEffect(()=>{
+        if(genreBasedQuestionData.length > 0){
+            getUnAnsweredQuestionOnFirstLoad();
+        }
+    },[]);
+
+    useEffect(()=>{
+        storeNotAnsweredHandler(onLoadUnAnseredQuestion);
+    },[onLoadUnAnseredQuestion])
 
     useEffect(()=>{
         setQuestionIndex(qsIndex - 1);

@@ -4,6 +4,7 @@ import {questions} from '../Data/questions';
 const initialState = {
     questionData: questions,
     genreBasedQuestionData: [],
+    onLoadUnAnseredQuestion: [],
     genreBasedQuestionTime: 0,
     genreBasedQuestionFullMarks: 0,
 }
@@ -28,10 +29,14 @@ const questionSortSlice = createSlice({
                 return acc;
             },0)
             state.genreBasedQuestionFullMarks = fullMarks;   
+        },
+        firstLoadUnAnsweredQuestion: (state = initialState)=>{
+            const allGenreBasedQues = state.genreBasedQuestionData;
+            state.onLoadUnAnseredQuestion.push(allGenreBasedQues);
         }
     }
 })
 
-export const {genreBasedQuestionSort} = questionSortSlice.actions;
+export const {genreBasedQuestionSort, firstLoadUnAnsweredQuestion} = questionSortSlice.actions;
 
 export default questionSortSlice.reducer;

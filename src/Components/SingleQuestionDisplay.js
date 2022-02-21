@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStateHandler from '../State Management/useStateHandler';
 
-function SingleQuestionDisplay({ genreId, questionId, questionText, answerOptions, questionIndex, setQIndex, questions, setSelectedAnswer}) {
+function SingleQuestionDisplay({ genreId, questionId, questionText, answerOptions, questionIndex, setQIndex, questions, setSelectedAnswer }) {
     const [selected, setSelected] = useState('');
-    const { prevAnswer, storeGivenAnswerHandler, submitGivenAnswerHandler, previousQuestionAnswerHandler } = useStateHandler();
+    const { prevAnswer, storeGivenAnswerHandler, storeNotAnsweredHandler, submitGivenAnswerHandler, previousQuestionAnswerHandler } = useStateHandler();
     const history = useNavigate();
 
     useEffect(() => {
@@ -12,42 +12,68 @@ function SingleQuestionDisplay({ genreId, questionId, questionText, answerOption
         setSelected(prevAnswer ? prevAnswer : '');
     }, [questionId, prevAnswer])
 
-    useEffect(()=>{
-        if(genreId){
+    useEffect(() => {
+        if (genreId) {
             history('/genre/' + genreId + "/" + (questionIndex + 1))
         }
-    },[questionIndex])
+    }, [questionIndex])
 
-    useEffect(()=>{
+    useEffect(() => {
         setSelectedAnswer(selected);
-    },[selected])
+    }, [selected])
+
+    //on option click will change - not done
+    // useEffect(() => {
+    //     if (selected != '') {
+    //         if (selected !== '') {
+    //             storeQuestionAnswer();
+    //         }else{
+    //             storeUnAnswerQuestionHandler();
+    //         }
+    //     }
+    // }, [selected])
 
     const checkCorrectNessHandler = () => {
         return answerOptions.find((item) => {
             return item.answerText === selected;
         })
     }
-    const storeQuestionAnswer = ()=>{
+    const storeQuestionAnswer = () => {
         const correctNess = checkCorrectNessHandler();
-        storeGivenAnswerHandler({ questionId: questionId, givenAnswerText: selected, rightNess: correctNess? correctNess.isCorrect : false});
+        storeGivenAnswerHandler({ questionId: questionId, givenAnswerText: selected, rightNess: correctNess ? correctNess.isCorrect : false, answerGiven: true });
+    }
+    const storeUnAnswerQuestionHandler = ()=>{
+        storeNotAnsweredHandler({questionId: questionId, givenAnswerText: selected, rightNess: false, answerGiven: false })
     }
     const onPrevClick = (e) => {
         e.preventDefault();
         setQIndex(prev => prev - 1);
-        storeQuestionAnswer();
+        if (selected !== '') {
+            storeQuestionAnswer();
+        }else{
+            storeUnAnswerQuestionHandler();
+        }
     }
     const onNextClick = (e) => {
         e.preventDefault();
         setQIndex(prev => prev + 1);
-        storeQuestionAnswer();
+        if (selected !== '') {
+            storeQuestionAnswer();
+        }else{
+            storeUnAnswerQuestionHandler();
+        }
     }
     const onAnswerChange = (e) => {
         setSelected(e.target.value);
     }
     const onSubmitHandler = (e) => {
         e.preventDefault();
-        const correctNess = checkCorrectNessHandler();
-        storeGivenAnswerHandler({ questionId: questionId, givenAnswerText: selected, rightNess: correctNess? correctNess.isCorrect : false });
+        if (selected !== '') {
+            const correctNess = checkCorrectNessHandler();
+            storeGivenAnswerHandler({ questionId: questionId, givenAnswerText: selected, rightNess: correctNess ? correctNess.isCorrect : false, answerGiven: true });
+        }else{
+            storeUnAnswerQuestionHandler();
+        }
         submitGivenAnswerHandler();
         history('/result');
     }

@@ -1,20 +1,101 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useStateHandler from '../State Management/useStateHandler';
 import { ButtonDiv } from '../Components/Styles/ButtonDiv.Styled';
 
 function SingleButtonInChart({ item, genreId, questionId, answerOptions, selectedAnswer }) {
-  const { genreBasedQuestionData, answerArr, unAnsweredArray, storeGivenAnswerHandler } = useStateHandler();
   const navigate = useNavigate();
-  const [unAnsweredArr, setUnAnsweredArr] = useState([]);
+  const questionNoFromUrl = parseInt(useParams().qIndex);
+  const { answerArr, unAnsweredArray, genreBasedQuestionData, onLoadUnAnseredQuestion, storeGivenAnswerHandler, storeNotAnsweredHandler } = useStateHandler();
+  const [answeredQues, setAnsweredQues] = useState([]);
+  const [unAnswereQues, setUnAnsweredQues] = useState([]);
+  const [unAnsweredIndexArr, setUnAnsweredIndexArr] = useState([]);
+  const [colorOfButton, setColorOfButton] = useState('');
 
   useEffect(() => {
-    console.log("unanswered")
-    console.log(unAnsweredArray)
-    console.log("answered")
+    setAnsweredQues(answerArr);
+    setUnAnsweredQues(unAnsweredArray[1])
+    console.log(".....")
+    console.log("Answer")
     console.log(answerArr)
-  }, [unAnsweredArray, answerArr])
+    console.log("Unanswered")
+    console.log(unAnsweredArray[1])
+  }, [questionNoFromUrl]);
 
+  useEffect(() => {
+    //All Ansered Question ID
+    if (answeredQues.length > 0 && unAnswereQues.length > 0) {
+      const answeredQuestionIds = answerArr.map((item) => {
+        return item.questionId;
+      })
+      // console.log("given answer")
+      // console.log(answerArr)
+      //All Questions ID
+      const allQuestionIds = genreBasedQuestionData.map((item) => {
+        return item.questionId;
+      })
+      // console.log("all")
+      // console.log(genreBasedQuestionData)
+      //Not Answered Question ID
+      const notAnsweredIds = allQuestionIds.filter((item) => {
+        return !answeredQuestionIds.includes(item);
+      })
+      // console.log("Not ID")
+      // console.log(notAnsweredIds);
+      //Not Answered Question Index
+      if (notAnsweredIds.length > 0) {
+        const notAnseredItem = genreBasedQuestionData.map((item, index) => {
+          if (notAnsweredIds.includes(item.questionId)) {
+            return index;
+          } else {
+            return item;
+          }
+        })
+        const notAnseredIndex = [];
+        for (let i = 0; i < notAnseredItem.length; i++) {
+          if (typeof notAnseredItem[i] === 'number') {
+            notAnseredIndex.push(notAnseredItem[i] + 1);
+          }
+        }
+        // console.log("index")
+        // console.log(notAnseredIndex)
+        setUnAnsweredIndexArr(notAnseredIndex);
+      }
+    } else if (answeredQues.length > 0 && unAnswereQues.length === 0) {
+      setUnAnsweredIndexArr([]);
+    } else {
+      const notAnseredIndex = onLoadUnAnseredQuestion[0]?.map((item, index) => {
+        return index + 1;
+      })
+      setUnAnsweredIndexArr(notAnseredIndex);
+    }
+
+  }, [answeredQues, unAnswereQues])
+
+  useEffect(() => {
+    console.log('/////')
+    console.log(unAnsweredIndexArr)
+    console.log(item)
+    if (unAnsweredIndexArr.includes(item)) {
+      console.log("Yellow");
+      setColorOfButton("Yellow");
+    } else {
+      console.log("Green");
+      setColorOfButton("Green");
+    }
+
+  }, [unAnsweredIndexArr, item]);
+
+  const questionButtonClick = () => {
+    if (selectedAnswer !== '') {
+      storeQuestionAnswer();
+    } else {
+      storeUnAnswerQuestionHandler();
+    }
+    if (genreId) {
+      navigate('/genre/' + genreId + '/' + item);
+    }
+  }
   const checkCorrectNessHandler = () => {
     return answerOptions.find((item) => {
       return item.answerText === selectedAnswer;
@@ -22,113 +103,18 @@ function SingleButtonInChart({ item, genreId, questionId, answerOptions, selecte
   }
   const storeQuestionAnswer = () => {
     const correctNess = checkCorrectNessHandler();
-    storeGivenAnswerHandler({ questionId: questionId, givenAnswerText: selectedAnswer, rightNess: correctNess ? correctNess.isCorrect : false });
+    storeGivenAnswerHandler({ questionId: questionId, givenAnswerText: selectedAnswer, rightNess: correctNess ? correctNess.isCorrect : false, answerGiven: true });
+  }
+  const storeUnAnswerQuestionHandler = () => {
+    storeNotAnsweredHandler({ questionId: questionId, givenAnswerText: selectedAnswer, rightNess: false, answerGiven: false })
   }
 
-  useEffect(() => {
-    console.log(selectedAnswer)
-    if (answerOptions && questionId && selectedAnswer && answerOptions){
-      storeQuestionAnswer();
-    }
-  }, [selectedAnswer]);
-
-  useEffect(() => {
-    if (questionId) {
-
-        //All Ansered Question ID
-        const answeredQuestionIds = answerArr.map((item) => {
-          return item.questionId;
-        })
-        // console.log("given answer")
-        // console.log(answerArr)
-        //All Questions ID
-        const allQuestionIds = genreBasedQuestionData.map((item) => {
-          return item.questionId;
-        })
-        // console.log("all")
-        // console.log(genreBasedQuestionData)
-        //Not Answered Question ID
-        const notAnswered = allQuestionIds.filter((item) => {
-          return !answeredQuestionIds.includes(item);
-        })
-        // console.log("Not ID")
-        // console.log(notAnswered);
-        //Not Answered Question Index
-        if (notAnswered.length > 0) {
-          const notAnseredItem = genreBasedQuestionData.map((item, index) => {
-            if (notAnswered.includes(item.questionId)) {
-              return index;
-            } else {
-              return item;
-            }
-          })
-          const notAnseredIndex = [];
-          for (let i = 0; i < notAnseredItem.length; i++) {
-            if (typeof notAnseredItem[i] === 'number') {
-              notAnseredIndex.push(notAnseredItem[i] + 1);
-            }
-          }
-          // console.log("index")
-          // console.log(notAnseredIndex)
-          setUnAnsweredArr(notAnseredIndex);
-        }
-
-    } else {
-      setUnAnsweredArr([]);
-    }
-  }, [questionId]);
-
-  // useEffect(() => {
-  //   const unAnsweredId = unAnsweredArr.map((item) => item.questionId);
-  //   const allQuestionIds = genreBasedQuestionData.map((item) => {
-  //     return item.questionId;
-  //   })
-  //   const notAnswered = allQuestionIds.filter((item) => {
-  //     return unAnsweredId.includes(item);
-  //   })
-  //   if (notAnswered.length > 0) {
-  //     const notAnseredItem = genreBasedQuestionData.map((item, index) => {
-  //       if (notAnswered.includes(item.questionId)) {
-  //         return index;
-  //       } else {
-  //         return item;
-  //       }
-  //     })
-  //     const notAnseredIndex = [];
-  //     for (let i = 0; i < notAnseredItem.length; i++) {
-  //       if (typeof notAnseredItem[i] === 'number') {
-  //         notAnseredIndex.push(notAnseredItem[i] + 1);
-  //       }
-  //     }
-  //     // console.log("index")
-  //     // console.log(notAnseredIndex)
-  //     setUnAnsweredArr(notAnseredIndex);
-  //   }
-
-
-  // }, [unAnsweredArray])
-
-  const questionButtonClick = (item) => {
-    navigate('/genre/' + genreId + "/" + item);
-    if (answerOptions && questionId && selectedAnswer && answerOptions) {
-      storeQuestionAnswer();
-    }
+  const getBgColorButton = () => {
+    return colorOfButton;
   }
-
-  const getBgColorButton = (item) => {
-    console.log(unAnsweredArr)
-    if (((unAnsweredArr.length === 0) || unAnsweredArr.includes(item))) {
-      console.log("true")
-      return "yellow";
-    } else {
-      console.log("false")
-      return "green";
-    }
-  }
-
   return (
     <ButtonDiv bgcolor={getBgColorButton(item)}>
-      <button onClick={() => questionButtonClick(item)}>
+      <button onClick={() => questionButtonClick()}>
         {item}
       </button>
     </ButtonDiv>
