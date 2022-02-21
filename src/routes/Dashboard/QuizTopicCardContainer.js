@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { QuestionTopicContainer, QuestionTopicsDiv, QuestionSingleTopicCard } from '../../Components/Styles/QuestionTopicContainer.styled';
-import QuizTopicCard from '../../Components/QuizTopicCard';
-import useStateHandler from '../../State Management/useStateHandler';
+import QuizTopicCard from '../../Components/quizTopicCard';
+import useStateHandler from '../../ReduxToolkit/useStateHandler';
 
 function QuizTopicCardContainer() {
   const {genreDetails} = useStateHandler();
 
   return (
     <QuestionTopicContainer>
-      <h3>Topics Card</h3>
       <QuestionTopicsDiv>
         {
           genreDetails?.map((item, index) =>

@@ -1,4 +1,5 @@
 import { createSlice, current } from '@reduxjs/toolkit';
+import {sliceNames} from './storeConstants';
 
 const initialState = {
     answerArr: [],
@@ -8,7 +9,7 @@ const initialState = {
 }
 
 const givenAnswerListSlice = createSlice({
-    name: 'Given Answer List',
+    name: sliceNames.GIVEN_ANSWER_LIST,
     initialState,
     reducers: {
         storeAnswerHandler: (state = initialState, action) => {
@@ -52,8 +53,16 @@ const givenAnswerListSlice = createSlice({
         storeUnAnsweredHandler: (state, action) => {
             if (state.answerArr.length === 0) {
                 console.log("In Reducer")
+                console.log(action.payload)
                 console.log(action.payload[0])
-                state.unAnsweredArr.push(action.payload[0]);
+                const arrayOfUnanswered = action.payload[0];
+                const modifiedArrayOfUnAnswered = arrayOfUnanswered?.map((item)=>({
+                    ...item,
+                    givenAnswerText: '',
+                    rightNess: false, 
+                    answerGiven: false 
+                }))
+                state.unAnsweredArr.push(modifiedArrayOfUnAnswered);
             } else {
                 console.log("on blank reponse")
                 console.log(action.payload)
@@ -81,8 +90,11 @@ const givenAnswerListSlice = createSlice({
             }
         },
         submittedAnswerHandler: (state) => {
-            const presentArr = state.answerArr;
-            state.submittedAns = presentArr;
+            console.log(current(state))
+            const presentAnsweredArr = state.answerArr;
+            const presentUnAnsweredArr = state.unAnsweredArr[1];
+            const submittedAns = presentAnsweredArr.concat(presentUnAnsweredArr);
+            state.submittedAns = submittedAns;
         }
     }
 })

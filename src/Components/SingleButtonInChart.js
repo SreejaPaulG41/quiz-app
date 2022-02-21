@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import useStateHandler from '../State Management/useStateHandler';
-import { ButtonDiv } from '../Components/Styles/ButtonDiv.Styled';
+import useStateHandler from '../ReduxToolkit/useStateHandler';
+import { ButtonDiv } from './Styles/ButtonDiv.Styled';
 
 function SingleButtonInChart({ item, genreId, questionId, answerOptions, selectedAnswer }) {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ function SingleButtonInChart({ item, genreId, questionId, answerOptions, selecte
   const [unAnswereQues, setUnAnsweredQues] = useState([]);
   const [unAnsweredIndexArr, setUnAnsweredIndexArr] = useState([]);
   const [colorOfButton, setColorOfButton] = useState('');
+  const [hoverColorButton, setHoverColorButton] = useState('');
 
   useEffect(() => {
     setAnsweredQues(answerArr);
@@ -78,10 +79,12 @@ function SingleButtonInChart({ item, genreId, questionId, answerOptions, selecte
     console.log(item)
     if (unAnsweredIndexArr.includes(item)) {
       console.log("Yellow");
-      setColorOfButton("Yellow");
+      setColorOfButton("#ffe033");
+      setHoverColorButton('#fff4b3');
     } else {
       console.log("Green");
-      setColorOfButton("Green");
+      setColorOfButton("#7bea7b");
+      setHoverColorButton('#bdf5bd');
     }
 
   }, [unAnsweredIndexArr, item]);
@@ -112,8 +115,11 @@ function SingleButtonInChart({ item, genreId, questionId, answerOptions, selecte
   const getBgColorButton = () => {
     return colorOfButton;
   }
+  const getHoverBgColor = ()=>{
+    return hoverColorButton;
+  }
   return (
-    <ButtonDiv bgcolor={getBgColorButton(item)}>
+    <ButtonDiv bgcolor={getBgColorButton()} hoverBgColor={getHoverBgColor()}>
       <button onClick={() => questionButtonClick()}>
         {item}
       </button>

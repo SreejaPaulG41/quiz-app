@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import useStateHandler from '../../State Management/useStateHandler';
-import AnswerKey from './AnswerKey';
-import MarksPannel from './MarksPannel';
+import useStateHandler from '../../ReduxToolkit/useStateHandler';
+import AnswerKey from './answerKey';
+import MarksPannel from './marksPannel';
 
 
 function Result() {
@@ -12,13 +12,22 @@ function Result() {
 
     useEffect(()=>{
       const totalQuestionCopy = [...genreBasedQuestionData];
+      console.log("In Result")
+      console.log(submittedAnswerArr)
+      //Sort the array in case there is some missing in between 
+      const sortedSubmittedAnswer = submittedAnswerArr?.slice().sort((a,b)=>{
+        return a.questionId - b.questionId;
+      })
       const resultArr = totalQuestionCopy.map((item, index)=>({
         ...item,
-        givenAnswerText : submittedAnswerArr[index].givenAnswerText,
-        rightNess : submittedAnswerArr[index].rightNess,
+        givenAnswerText : sortedSubmittedAnswer[index].givenAnswerText,
+        rightNess : sortedSubmittedAnswer[index].rightNess,
+        answerGiven: sortedSubmittedAnswer[index].answerGiven,
       }))
       const marksGot = resultArr.reduce((acc, item)=>{
-        return  (item.rightNess) ? (acc + item.questionMark) : (acc);
+        console.log(item.questionMark)
+        console.log(item.rightNess)
+        return  (item.rightNess) ? (acc + item.questionMark) : ((item.answerGiven)? (acc - (item.questionMark*0.50)) : acc);
       },0);
       const percentage = (marksGot / genreBasedQuestionFullMarks) * 100;
       setPercentageMarks(percentage);
@@ -27,8 +36,7 @@ function Result() {
   },[submittedAnswerArr, genreBasedQuestionData]);
 
   return (
-    <div>
-      <h1>Result</h1>
+    <div style={{padding: '10px', marginTop: '30px'}}>
       <MarksPannel percentageMarksGot={percentageMarks}/>
       <AnswerKey resultArrToShow={resultArrToShow}/>
     </div>

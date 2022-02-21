@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {questions} from '../Data/questions';
+import {sliceNames} from './storeConstants';
 
 const initialState = {
     questionData: questions,
@@ -10,7 +11,7 @@ const initialState = {
 }
 
 const questionSortSlice = createSlice({
-    name: 'Question Sorting According To Genre',
+    name: sliceNames.QUESTION_SORTING_ACCORDING_TO_GENRE,
     initialState,
     reducers:{ //will contain the reduece functions
         genreBasedQuestionSort: (state = initialState , action)=>{

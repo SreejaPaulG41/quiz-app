@@ -1,22 +1,22 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {genreBasedQuestionSort} from '../State Management/questionSortSlice';
-import useStateHandler from '../State Management/useStateHandler';
+import {IndividualCard} from './Styles/QuestionTopicContainer.styled';
+import useStateHandler from '../ReduxToolkit/useStateHandler';
 
 function QuizTopicCard({name, id}) {
     const {genreBasedSortQuestionHandler} = useStateHandler();
 
     return (
-        <div>
+        <IndividualCard>
             <div>
-                {name}
+                <h1>{name}</h1>
             </div>
             <div>
                 <Link to={"/genre/" + id + "/1"}>
                     <button onClick={()=>genreBasedSortQuestionHandler(id)}>Start Quiz</button>
                 </Link>
             </div>
-        </div>
+        </IndividualCard>
     )
 }
 

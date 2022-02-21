@@ -1,6 +1,6 @@
 import React from 'react'
-import Navbar from '../../Components/Navbar'
-import QuizTopicCardContainer from './QuizTopicCardContainer'
+import Navbar from '../../Components/navbar'
+import QuizTopicCardContainer from './quizTopicCardContainer'
 
 function Dashboard() {
   return (

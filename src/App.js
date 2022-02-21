@@ -1,8 +1,8 @@
 import { AppContainer } from "./Components/Styles/AppContainer.styled";
-import Dashboard from "./routes/Dashboard/Dashboard";
+import Dashboard from "./routes/Dashboard/dashboard";
 import { Routes, Route } from 'react-router-dom';
-import QuestionDisplayContainer from "./routes/Genre/QuestionDisplayContainer";
-import Result from "./routes/Result/Result";
+import QuestionDisplayContainer from "./routes/Genre/questionDisplayContainer";
+import Result from "./routes/Result/result";
 
 function App() {
   return (

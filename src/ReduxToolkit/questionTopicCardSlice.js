@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { genres } from "../Data/genres";
+import {sliceNames} from './storeConstants';
 
 const initialState = {
     genreDetails: genres,
 }
 
 const questionTopicCardSlice = createSlice({
-    name: 'Render Genre Name And ID',
+    name: sliceNames.RENDER_GENRE_NAME_AND_ID,
     initialState,
     reducers:{
 
